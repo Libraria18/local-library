@@ -3,7 +3,6 @@ const Book = require("../models/book");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
-// Список авторів
 exports.author_list = asyncHandler(async (req, res, next) => {
   const allAuthors = await Author.find().sort({ family_name: 1 }).exec();
 
@@ -13,7 +12,6 @@ exports.author_list = asyncHandler(async (req, res, next) => {
   });
 });
 
-// Деталі автора
 exports.author_detail = asyncHandler(async (req, res, next) => {
   const [author, allBooksByAuthor] = await Promise.all([
     Author.findById(req.params.id).exec(),
@@ -33,27 +31,21 @@ exports.author_detail = asyncHandler(async (req, res, next) => {
   });
 });
 
-// GET форма автора
 exports.author_create_get = (req, res, next) => {
   res.render("author_form", { title: "Створити автора" });
 };
 
-// POST создание автора
 exports.author_create_post = [
   body("first_name")
     .trim()
-    .isLength({ min: 1 })
-    .withMessage("Ім'я повинно бути вказано.")
-    .isAlphanumeric()
-    .withMessage("Ім'я містить неалфанумерні символи.")
+    .isLength({ min: 1 }).withMessage("Ім'я повинно бути вказано.")
+    .isAlphanumeric().withMessage("Ім'я містить неалфанумерні символи.")
     .escape(),
 
   body("family_name")
     .trim()
-    .isLength({ min: 1 })
-    .withMessage("Прізвище повинно бути вказано.")
-    .isAlphanumeric()
-    .withMessage("Прізвище містить неалфанумерні символи.")
+    .isLength({ min: 1 }).withMessage("Прізвище повинно бути вказано.")
+    .isAlphanumeric().withMessage("Прізвище містить неалфанумерні символи.")
     .escape(),
 
   body("date_of_birth", "Недійсна дата народження")

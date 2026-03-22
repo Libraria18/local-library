@@ -3,7 +3,6 @@ const Book = require("../models/book");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
-// Список жанрів
 exports.genre_list = asyncHandler(async (req, res, next) => {
   const allGenres = await Genre.find().sort({ name: 1 }).exec();
 
@@ -13,7 +12,6 @@ exports.genre_list = asyncHandler(async (req, res, next) => {
   });
 });
 
-// Деталі жанру
 exports.genre_detail = asyncHandler(async (req, res, next) => {
   const [genre, booksInGenre] = await Promise.all([
     Genre.findById(req.params.id).exec(),
@@ -33,17 +31,14 @@ exports.genre_detail = asyncHandler(async (req, res, next) => {
   });
 });
 
-// GET форма жанру
 exports.genre_create_get = (req, res, next) => {
   res.render("genre_form", { title: "Створити жанр" });
 };
 
-// POST создание жанру
 exports.genre_create_post = [
   body("name")
     .trim()
-    .isLength({ min: 3 })
-    .withMessage("Назва жанру повинна містити мінімум 3 символи.")
+    .isLength({ min: 3 }).withMessage("Назва жанру повинна містити мінімум 3 символи.")
     .escape(),
 
   asyncHandler(async (req, res, next) => {

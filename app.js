@@ -1,53 +1,72 @@
-// app.js
-require('dotenv').config(); // Загружаем переменные окружения из .env
+require("dotenv").config();
 
-const express = require('express');
-const path = require('path');
-const logger = require('morgan');
-const mongoose = require('mongoose');
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const compression = require("compression");
+const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const catalogRouter = require('./routes/catalog'); // Маршруты каталога
+const connectDB = require("./db");
+
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const catalogRouter = require("./routes/catalog");
 
 const app = express();
 
-// --- Подключение к MongoDB ---
-const mongoDB = process.env.MONGO_URI;
+connectDB();
 
-console.log("MONGO_URI exists:", !!mongoDB);
+// view engine setup
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "pug");
 
-mongoose
-  .connect(mongoDB)
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// security / performance
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 100,
+});
+app.use(limiter);
+app.use(compression());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+      styleSrc: ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
+      imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'", "cdn.jsdelivr.net"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: null,
+    },
+  }),
+);
 
-// --- Настройка Pug ---
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
-// --- Middleware ---
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
-// --- Роуты ---
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/catalog', catalogRouter);
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
+app.use("/catalog", catalogRouter);
 
-// --- Обработка ошибок 404 ---
-app.use((req, res, next) => {
-  res.status(404);
-  res.render('error', { message: '404 Not Found', error: {} });
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(createError(404));
 });
 
-// --- Обработка других ошибок ---
-app.use((err, req, res, next) => {
-  console.error(err.stack);
+// error handler
+app.use(function (err, req, res, next) {
+  res.locals.message = err.message;
+  res.locals.error = process.env.NODE_ENV === "production" ? {} : err;
+
   res.status(err.status || 500);
-  res.render('error', { message: 'Server Error', error: err });
+  res.render("error");
 });
 
 module.exports = app;

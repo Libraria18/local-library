@@ -5,6 +5,8 @@ html(lang='uk')
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css", crossorigin="anonymous")
+    script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", crossorigin="anonymous")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js", crossorigin="anonymous")
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     .container-fluid
@@ -27,5 +29,9 @@ html(lang='uk')
               a(href='/catalog/author/create') Додати автора
             li
               a(href='/catalog/genre/create') Додати жанр
+            li
+              a(href='/catalog/book/create') Додати книгу
+            li
+              a(href='/catalog/bookinstance/create') Додати екземпляр книги
         .col-sm-10
           block content

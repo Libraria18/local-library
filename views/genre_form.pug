@@ -6,13 +6,7 @@ block content
   form(method='POST')
     .form-group
       label(for='name') Назва жанру:
-      input#name.form-control(
-        type='text',
-        placeholder='Назва жанру',
-        name='name',
-        required,
-        value=(undefined === genre ? '' : genre.name)
-      )
+      input#name.form-control(type='text', placeholder='Назва жанру', name='name', required, value=(undefined === genre ? '' : genre.name))
 
     button.btn.btn-primary(type='submit') Зберегти
 

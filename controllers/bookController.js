@@ -3,8 +3,8 @@ const Author = require("../models/author");
 const Genre = require("../models/genre");
 const BookInstance = require("../models/bookinstance");
 const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
 
-// Домашня сторінка
 exports.index = asyncHandler(async (req, res, next) => {
   const [
     numBooks,
@@ -30,7 +30,6 @@ exports.index = asyncHandler(async (req, res, next) => {
   });
 });
 
-// Список книг
 exports.book_list = asyncHandler(async (req, res, next) => {
   const allBooks = await Book.find({}, "title author")
     .sort({ title: 1 })
@@ -43,7 +42,6 @@ exports.book_list = asyncHandler(async (req, res, next) => {
   });
 });
 
-// Деталі книги
 exports.book_detail = asyncHandler(async (req, res, next) => {
   const [book, bookInstances] = await Promise.all([
     Book.findById(req.params.id).populate("author").populate("genre").exec(),
@@ -62,9 +60,7 @@ exports.book_detail = asyncHandler(async (req, res, next) => {
     book_instances: bookInstances,
   });
 });
-const { body, validationResult } = require("express-validator");
 
-// GET форма создания книги
 exports.book_create_get = asyncHandler(async (req, res, next) => {
   const [allAuthors, allGenres] = await Promise.all([
     Author.find().sort({ family_name: 1 }).exec(),
@@ -78,9 +74,7 @@ exports.book_create_get = asyncHandler(async (req, res, next) => {
   });
 });
 
-// POST создание книги
 exports.book_create_post = [
-  // превращаем genre в массив
   (req, res, next) => {
     if (!Array.isArray(req.body.genre)) {
       req.body.genre =
@@ -89,11 +83,10 @@ exports.book_create_post = [
     next();
   },
 
-  // validation
-  body("title").trim().isLength({ min: 1 }).escape(),
-  body("author").trim().isLength({ min: 1 }).escape(),
-  body("summary").trim().isLength({ min: 1 }).escape(),
-  body("isbn").trim().isLength({ min: 1 }).escape(),
+  body("title", "Назва не повинна бути порожньою.").trim().isLength({ min: 1 }).escape(),
+  body("author", "Автор не повинен бути порожнім.").trim().isLength({ min: 1 }).escape(),
+  body("summary", "Опис не повинен бути порожнім.").trim().isLength({ min: 1 }).escape(),
+  body("isbn", "ISBN не повинен бути порожнім.").trim().isLength({ min: 1 }).escape(),
   body("genre.*").escape(),
 
   asyncHandler(async (req, res, next) => {
@@ -115,7 +108,7 @@ exports.book_create_post = [
 
       for (const genre of allGenres) {
         if (book.genre.includes(genre._id.toString())) {
-          genre.checked = "true";
+          genre.checked = true;
         }
       }
 

@@ -1,9 +1,12 @@
 const BookInstance = require("../models/bookinstance");
+const Book = require("../models/book");
 const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
 
-// Список екземплярів книг
 exports.bookinstance_list = asyncHandler(async (req, res, next) => {
-  const allBookInstances = await BookInstance.find().populate("book").exec();
+  const allBookInstances = await BookInstance.find()
+    .populate("book")
+    .exec();
 
   res.render("bookinstance_list", {
     title: "Список екземплярів книг",
@@ -11,7 +14,6 @@ exports.bookinstance_list = asyncHandler(async (req, res, next) => {
   });
 });
 
-// Деталі екземпляра книги
 exports.bookinstance_detail = asyncHandler(async (req, res, next) => {
   const bookInstance = await BookInstance.findById(req.params.id)
     .populate("book")
@@ -28,10 +30,7 @@ exports.bookinstance_detail = asyncHandler(async (req, res, next) => {
     bookInstance: bookInstance,
   });
 });
-const { body, validationResult } = require("express-validator");
-const Book = require("../models/book");
 
-// GET форма
 exports.bookinstance_create_get = asyncHandler(async (req, res, next) => {
   const allBooks = await Book.find().sort({ title: 1 }).exec();
 
@@ -41,12 +40,11 @@ exports.bookinstance_create_get = asyncHandler(async (req, res, next) => {
   });
 });
 
-// POST форма
 exports.bookinstance_create_post = [
-  body("book").trim().isLength({ min: 1 }).escape(),
-  body("imprint").trim().isLength({ min: 1 }).escape(),
+  body("book").trim().isLength({ min: 1 }).withMessage("Книга обов'язкова").escape(),
+  body("imprint").trim().isLength({ min: 1 }).withMessage("Відбиток обов'язковий").escape(),
   body("status").optional().escape(),
-  body("due_back").optional({ values: "falsy" }).isISO8601().toDate(),
+  body("due_back").optional({ values: "falsy" }).isISO8601().withMessage("Невірна дата").toDate(),
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);

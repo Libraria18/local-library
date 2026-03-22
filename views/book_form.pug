@@ -4,41 +4,45 @@ block content
   h1= title
 
   form(method='POST')
-    div.form-group
-      label Назва:
-      input.form-control(type='text', name='title', value=(book ? book.title : ''), required)
+    .form-group
+      label(for='title') Назва:
+      input#title.form-control(type='text', placeholder='Назва книги', name='title', required, value=(undefined === book ? '' : book.title))
 
-    div.form-group
-      label Автор:
-      select.form-control(name='author', required)
-        option(value='') -- Виберіть автора --
+    .form-group
+      label(for='author') Автор:
+      select#author.form-control(name='author', required)
+        option(value='') --Будь ласка, виберіть автора--
         each author in authors
-          if book && author._id.toString() === book.author.toString()
-            option(value=author._id selected) #{author.name}
+          if book
+            if author._id.toString() === book.author.toString()
+              option(value=author._id selected) #{author.name}
+            else
+              option(value=author._id) #{author.name}
           else
             option(value=author._id) #{author.name}
 
-    div.form-group
-      label Опис:
-      textarea.form-control(name='summary')= book ? book.summary : ''
+    .form-group
+      label(for='summary') Опис:
+      textarea#summary.form-control(placeholder='Опис', name='summary', required)= undefined === book ? '' : book.summary
 
-    div.form-group
-      label ISBN:
-      input.form-control(type='text', name='isbn', value=(book ? book.isbn : ''), required)
+    .form-group
+      label(for='isbn') ISBN:
+      input#isbn.form-control(type='text', placeholder='ISBN13', name='isbn', value=(undefined === book ? '' : book.isbn), required)
 
-    div.form-group
-      label Жанри:
-      each genre in genres
-        div
-          if genre.checked
-            input(type='checkbox', name='genre', value=genre._id, checked)
-          else
-            input(type='checkbox', name='genre', value=genre._id)
-          |  #{genre.name}
+    .form-group
+      label Жанр:
+      div
+        each genre in genres
+          div(style='display: inline; padding-right:10px;')
+            if genre.checked
+              input.checkbox-input(type='checkbox', name='genre', id=genre._id, value=genre._id, checked)
+            else
+              input.checkbox-input(type='checkbox', name='genre', id=genre._id, value=genre._id)
+            label(for=genre._id) &nbsp;#{genre.name}
 
     button.btn.btn-primary(type='submit') Зберегти
 
   if errors
     ul
       each error in errors
-        li= error.msg
+        li!= error.msg

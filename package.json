@@ -1,30 +1,31 @@
 {
-  "name": "locallibrary",
+  "name": "local-library",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "devstart": "nodemon ./bin/www",
-    "serverstart": "DEBUG=locallibrary:* npm run devstart"
+    "devstart": "nodemon ./bin/www"
   },
   "dependencies": {
-    "compression": "^1.8.1",
+    "compression": "^1.7.5",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^17.3.1",
     "express": "~4.16.1",
     "express-async-handler": "^1.2.0",
-    "express-rate-limit": "^8.3.1",
-    "express-validator": "^7.3.1",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
     "http-errors": "~1.6.3",
-    "luxon": "^3.7.2",
-    "mongodb": "^7.1.0",
-    "mongoose": "^9.3.1",
+    "luxon": "^3.6.1",
+    "mongoose": "^8.19.1",
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.10"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
