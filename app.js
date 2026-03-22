@@ -18,6 +18,7 @@ const catalogRouter = require("./routes/catalog");
 const app = express();
 
 connectDB();
+app.set("trust proxy", 1);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
