@@ -1,18 +1,30 @@
 extends layout
 
 block content
-  h1 Автор: #{author.name}
+  h1
+    | Автор: 
+    if author && author.name
+      #{author.name}
+    else
+      | Автор не знайдений
 
-  p #{author.lifespan}
+  if author
+    p #{author.lifespan ? author.lifespan : ''}
 
   div(style='margin-left:20px;margin-top:20px')
     h2(style='font-size: 1.5rem;') Книги
 
-    if author_books.length
+    if author_books && author_books.length
       dl
         each book in author_books
           dt
-            a(href=book.url) #{book.title}
-          dd #{book.summary}
+            if book && book.url
+              a(href=book.url) #{book.title}
+            else if book
+              | #{book.title}
+          if book && book.summary
+            dd #{book.summary}
+          else
+            dd Опис відсутній
     else
       p У цього автора немає книг.

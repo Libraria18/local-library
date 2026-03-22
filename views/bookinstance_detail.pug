@@ -4,21 +4,33 @@ block content
   h1= title
 
   h2 Книга
-  if bookInstance.book
-    a(href=`/catalog/book/${bookInstance.book._id}`) #{bookInstance.book.title}
+  if bookInstance && bookInstance.book
+    if bookInstance.book.url
+      a(href=bookInstance.book.url) #{bookInstance.book.title}
+    else
+      | #{bookInstance.book.title}
   else
     p Книга не указана
 
   h2 Статус
-  span(class=bookInstance.status === 'Available' ? 'text-success' : bookInstance.status === 'Maintenance' ? 'text-danger' : 'text-warning')
-    #{bookInstance.status}
+  if bookInstance
+    span(class=bookInstance.status === 'Available' ? 'text-success' : bookInstance.status === 'Maintenance' ? 'text-danger' : 'text-warning')
+      #{bookInstance.status}
+  else
+    p Статус не указан
 
-  if bookInstance.status !== 'Available' && bookInstance.due_back
+  if bookInstance && bookInstance.status !== 'Available' && bookInstance.due_back
     h3 Дата повернення
     p #{bookInstance.due_back_formatted ? bookInstance.due_back_formatted : bookInstance.due_back}
 
   h2 Відбиток
-  p #{bookInstance.imprint}
+  if bookInstance && bookInstance.imprint
+    p #{bookInstance.imprint}
+  else
+    p Відбиток не вказаний
 
   h2 ID
-  p #{bookInstance._id}
+  if bookInstance && bookInstance._id
+    p #{bookInstance._id}
+  else
+    p ID не знайдено

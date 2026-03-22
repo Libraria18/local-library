@@ -6,7 +6,10 @@ block content
   p
     strong Автор:
     |  
-    a(href=book.author.url) #{book.author.name}
+    if book.author
+      a(href=book.author.url) #{book.author.name}
+    else
+      | Автор не вказаний
 
   p
     strong Короткий опис:
@@ -19,10 +22,14 @@ block content
   p
     strong Жанр:
     |  
-    each val, index in book.genre
-      a(href=val.url) #{val.name}
-      if index < book.genre.length - 1
-        | , 
+    if book.genre && book.genre.length
+      each val, index in book.genre
+        if val
+          a(href=val.url) #{val.name}
+          if index < book.genre.length - 1
+            | , 
+    else
+      | Жанр не вказаний
 
   div(style='margin-left:20px;margin-top:20px')
     h2(style='font-size: 1.5rem;') Копії
@@ -48,6 +55,9 @@ block content
       p
         strong Ідентифікатор:
         |  
-        a(href=val.url) #{val._id}
+        if val.url
+          a(href=val.url) #{val._id}
+        else
+          | #{val._id}
     else
       p У бібліотеці немає копій цієї книги.
