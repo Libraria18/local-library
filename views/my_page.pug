@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  //- Багатострічковий коментар:
+  //
+  // Цей шаблон відображає сторінку my-page українською
+  // Використовуємо передані змінні title та items
+
+  h1(style="color: blue; text-decoration: underline;")= title
+  p Ця сторінка відображається за допомогою Pug.
+
+  ul
+    each item in items
+      li(style="color: green; list-style-type: square;")= item

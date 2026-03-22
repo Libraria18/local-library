@@ -1,0 +1,31 @@
+doctype html
+html(lang='uk')
+  head
+    title= title
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css", crossorigin="anonymous")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    .container-fluid
+      .row
+        .col-sm-2
+          ul.sidebar-nav
+            li
+              a(href='/catalog') Головна
+            li
+              a(href='/catalog/books') Усі книги
+            li
+              a(href='/catalog/authors') Усі автори
+            li
+              a(href='/catalog/genres') Усі жанри
+            li
+              a(href='/catalog/bookinstances') Усі екземпляри книг
+            li
+              hr
+            li
+              a(href='/catalog/author/create') Додати автора
+            li
+              a(href='/catalog/genre/create') Додати жанр
+        .col-sm-10
+          block content

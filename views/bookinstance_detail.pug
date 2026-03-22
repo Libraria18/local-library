@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1= title
+
+  h2 Книга
+  if bookInstance.book
+    a(href=`/catalog/book/${bookInstance.book._id}`) #{bookInstance.book.title}
+  else
+    p Книга не указана
+
+  h2 Статус
+  span(class=bookInstance.status === 'Available' ? 'text-success' : bookInstance.status === 'Maintenance' ? 'text-danger' : 'text-warning')
+    #{bookInstance.status}
+
+  if bookInstance.status !== 'Available' && bookInstance.due_back
+    h3 Дата повернення
+    p #{bookInstance.due_back_formatted ? bookInstance.due_back_formatted : bookInstance.due_back}
+
+  h2 Відбиток
+  p #{bookInstance.imprint}
+
+  h2 ID
+  p #{bookInstance._id}

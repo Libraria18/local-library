@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= title
+
+  if bookinstance_list.length
+    ul
+      each val in bookinstance_list
+        li
+          a(href=val.url) #{val.book ? val.book.title : 'Не указана книга'}
+          |  - 
+          span(class=val.status === 'Available' ? 'text-success' : val.status === 'Maintenance' ? 'text-danger' : 'text-warning') #{val.status}
+          if val.status !== 'Available'
+            | , Due: #{val.due_back_formatted}
+  else
+    p Екземплярів книг немає.

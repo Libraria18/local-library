@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST')
+
+    div.form-group
+      label Книга:
+      select.form-control(name='book', required)
+        each book in book_list
+          option(value=book._id) #{book.title}
+
+    div.form-group
+      label Видавництво:
+      input.form-control(type='text', name='imprint', required)
+
+    div.form-group
+      label Статус:
+      select.form-control(name='status')
+        option(value='Maintenance') Maintenance
+        option(value='Available') Available
+        option(value='Loaned') Loaned
+        option(value='Reserved') Reserved
+
+    div.form-group
+      label Дата повернення:
+      input.form-control(type='date', name='due_back')
+
+    button.btn.btn-primary(type='submit') Зберегти
+
+  if errors
+    ul
+      each error in errors
+        li= error.msg
