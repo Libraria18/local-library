@@ -15,9 +15,12 @@ const app = express();
 // --- Подключение к MongoDB ---
 const mongoDB = process.env.MONGO_URI;
 
-mongoose.connect(mongoDB)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch(err => console.error('MongoDB connection error:', err));
+console.log("MONGO_URI exists:", !!mongoDB);
+
+mongoose
+  .connect(mongoDB)
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // --- Настройка Pug ---
 app.set('views', path.join(__dirname, 'views'));
