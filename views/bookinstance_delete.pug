@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1 Видалити екземпляр
+
+  p Ви впевнені?
+
+  form(method='POST')
+    input(type='hidden', name='bookinstanceid', value=bookInstance._id)
+    button.btn.btn-danger Видалити

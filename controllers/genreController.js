@@ -68,3 +68,38 @@ exports.genre_create_post = [
     res.redirect(genre.url);
   }),
 ];
+exports.genre_delete_get = asyncHandler(async (req, res, next) => {
+  const [genre, books] = await Promise.all([
+    Genre.findById(req.params.id).exec(),
+    Book.find({ genre: req.params.id }).exec(),
+  ]);
+
+  if (genre === null) {
+    return res.redirect('/catalog/genres');
+  }
+
+  res.render('genre_delete', {
+    title: 'Видалити жанр',
+    genre,
+    genre_books: books,
+  });
+});
+
+exports.genre_delete_post = asyncHandler(async (req, res, next) => {
+  const [genre, books] = await Promise.all([
+    Genre.findById(req.params.id).exec(),
+    Book.find({ genre: req.params.id }).exec(),
+  ]);
+
+  if (books.length > 0) {
+    res.render('genre_delete', {
+      title: 'Видалити жанр',
+      genre,
+      genre_books: books,
+    });
+    return;
+  }
+
+  await Genre.findByIdAndDelete(req.body.genreid);
+  res.redirect('/catalog/genres');
+});

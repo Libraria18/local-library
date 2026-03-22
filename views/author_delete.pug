@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1 Видалити автора: #{author.name}
+
+  if author.lifespan
+    p #{author.lifespan}
+
+  if author_books && author_books.length
+    p #[strong Спочатку видаліть книги цього автора]
+
+    div(style='margin-left:20px;margin-top:20px')
+      h4 Книги
+      dl
+        each book in author_books
+          dt
+            if book.url
+              a(href=book.url) #{book.title}
+            else
+              | #{book.title}
+          dd #{book.summary}
+  else
+    p Ви впевнені, що хочете видалити автора?
+
+    form(method='POST')
+      input(type='hidden', name='authorid', value=author._id)
+      button.btn.btn-danger Видалити

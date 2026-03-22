@@ -80,3 +80,40 @@ exports.author_create_post = [
     res.redirect(author.url);
   }),
 ];
+// GET
+exports.author_delete_get = asyncHandler(async (req, res, next) => {
+  const [author, author_books] = await Promise.all([
+    Author.findById(req.params.id).exec(),
+    Book.find({ author: req.params.id }).exec(),
+  ]);
+
+  if (author === null) {
+    return res.redirect("/catalog/authors");
+  }
+
+  res.render("author_delete", {
+    title: "Видалити автора",
+    author,
+    author_books,
+  });
+});
+
+
+// POST
+exports.author_delete_post = asyncHandler(async (req, res, next) => {
+  const [author, author_books] = await Promise.all([
+    Author.findById(req.params.id).exec(),
+    Book.find({ author: req.params.id }).exec(),
+  ]);
+
+  if (author_books.length > 0) {
+    return res.render("author_delete", {
+      title: "Видалити автора",
+      author,
+      author_books,
+    });
+  }
+
+  await Author.findByIdAndDelete(req.body.authorid);
+  res.redirect("/catalog/authors");
+});

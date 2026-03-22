@@ -71,3 +71,20 @@ exports.bookinstance_create_post = [
     res.redirect(bookInstance.url);
   }),
 ];
+exports.bookinstance_delete_get = asyncHandler(async (req, res, next) => {
+  const bookInstance = await BookInstance.findById(req.params.id).exec();
+
+  if (bookInstance === null) {
+    return res.redirect('/catalog/bookinstances');
+  }
+
+  res.render('bookinstance_delete', {
+    title: 'Видалити екземпляр',
+    bookInstance,
+  });
+});
+
+exports.bookinstance_delete_post = asyncHandler(async (req, res, next) => {
+  await BookInstance.findByIdAndDelete(req.body.bookinstanceid);
+  res.redirect('/catalog/bookinstances');
+});

@@ -125,3 +125,41 @@ exports.book_create_post = [
     res.redirect(book.url);
   }),
 ];
+// GET
+exports.book_delete_get = asyncHandler(async (req, res, next) => {
+  const [book, bookInstances] = await Promise.all([
+    Book.findById(req.params.id).populate('author').exec(),
+    BookInstance.find({ book: req.params.id }).exec(),
+  ]);
+
+  if (book === null) {
+    return res.redirect('/catalog/books');
+  }
+
+  res.render('book_delete', {
+    title: 'Видалити книгу',
+    book,
+    book_instances: bookInstances,
+  });
+});
+
+
+// POST
+exports.book_delete_post = asyncHandler(async (req, res, next) => {
+  const [book, bookInstances] = await Promise.all([
+    Book.findById(req.params.id).exec(),
+    BookInstance.find({ book: req.params.id }).exec(),
+  ]);
+
+  if (bookInstances.length > 0) {
+    res.render('book_delete', {
+      title: 'Видалити книгу',
+      book,
+      book_instances: bookInstances,
+    });
+    return;
+  }
+
+  await Book.findByIdAndDelete(req.body.bookid);
+  res.redirect('/catalog/books');
+});

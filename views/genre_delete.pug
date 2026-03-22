@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 Видалити жанр: #{genre.name}
+
+  if genre_books.length
+    p #[strong Видаліть книги цього жанру]
+  else
+    p Ви впевнені?
+
+    form(method='POST')
+      input(type='hidden', name='genreid', value=genre._id)
+      button.btn.btn-danger Видалити

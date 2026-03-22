@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1 Видалити книгу: #{book.title}
+
+  if book_instances.length
+    p #[strong Спочатку видаліть копії цієї книги]
+    each instance in book_instances
+      p #{instance._id} - #{instance.status}
+  else
+    p Ви впевнені, що хочете видалити книгу?
+
+    form(method='POST')
+      input(type='hidden', name='bookid', value=book._id)
+      button.btn.btn-danger Видалити
